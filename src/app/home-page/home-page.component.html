@@ -1,7 +1,8 @@
-<h1 class="text-3xl font-bold underline">Spellbook</h1>
-<p>home-page works!</p>
-
 <div class="flex flex-col">
+  <h1 class="text-3xl font-bold underline flex flex-col text-center pb-2">
+    Spellbook
+  </h1>
+
   <app-spell-button (click)="magicMissileConfirm()" bgColor="bg-purple-700"
     >Magic Missile</app-spell-button
   >
@@ -18,11 +19,11 @@
     >Minimize</app-spell-button
   >
 
-  <app-spell-button routerLink="stone-defense-page" bgColor="bg-amber-900">
+  <app-spell-button bgColor="bg-amber-900" (click)="stoneDefenseConfirm()">
     Stone Defense
   </app-spell-button>
 
-  <app-spell-button routerLink="charge-attack-page" bgColor="bg-indigo-800">
+  <app-spell-button (click)="chargeAttackConfirm()" bgColor="bg-indigo-800">
     Charge Attack
   </app-spell-button>
 
@@ -35,30 +36,20 @@
 
   <app-spell-button
     class="btn btn-info"
-    (click)="icebeamConfirm()"
+    (click)="fireballConfirm()"
     bgColor="bg-sky-500"
     >Icebeam</app-spell-button
   >
 
-  <app-spell-button class="btn btn-primary" bgColor="bg-yellow-400">
+  <app-spell-button (click)="blindingLightConfirm()" bgColor="bg-yellow-400">
     Blinding Light
   </app-spell-button>
 </div>
 
-<div class="flex flex-row justify-center">
-  <button
-    class="text-white font-bold py-2 px-10 rounded container bg-gray-900 w-1/2 justify-center"
-    (click)="combatButtonClicked()"
-  >
-    Fight monsters
-  </button>
-</div>
+<app-spell-button bgColor="bg-gray-900" (click)="combatButtonClicked()">
+  Fight monsters
+</app-spell-button>
 
-<div class="flex flex-row justify-center">
-  <button
-    class="text-white font-bold py-2 px-10 rounded container bg-gray-900 w-1/2 justify-center"
-    (click)="demonlordConfirm()"
-  >
-    Fight Demonlord
-  </button>
-</div>
+<app-spell-button bgColor="bg-gray-900" (click)="demonlordConfirm()">
+  Fight Demonlord
+</app-spell-button>

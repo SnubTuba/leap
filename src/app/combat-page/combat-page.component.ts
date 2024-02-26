@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerService } from './player.service';
 import { Monster } from './monsters';
-import { EncounterTableService } from './encounter-table';
+import { EncounterTableService } from './encounter-table.service';
 import { Pages } from '../app-routing.module';
 import { UnlocksService } from '../unlocks.service';
 import { Unlockables } from '../spells';
+import { CombatLogService } from './combat-log.service';
 
 @Component({
   selector: 'app-combat-page',
@@ -18,8 +19,10 @@ export class CombatPageComponent {
     public player: PlayerService,
     private activatedRoute: ActivatedRoute,
     private encounterTableService: EncounterTableService,
-    public unlocksService: UnlocksService
+    public unlocksService: UnlocksService,
+    public combatLogService: CombatLogService
   ) {
+    this.combatLogService.clear();
     this.player.reset();
     this.activatedRoute.queryParams.subscribe((queryParams) => {
       const encounterNumber = queryParams['encounter'];
@@ -27,8 +30,7 @@ export class CombatPageComponent {
         this.gameState = 'error';
         throw new Error('No Envounter Error');
       }
-      this.monsters =
-        this.encounterTableService.encounterTable[encounterNumber];
+      this.monsters = this.encounterTableService.getEncounter(+encounterNumber);
       this.gameState = 'fighting';
     });
   }
@@ -38,20 +40,19 @@ export class CombatPageComponent {
   selectedSpell?: Unlockables.Spell =
     this.unlocksService.getUnlockedSpells()[0];
   monsters: Monster[] = [];
-  combatLog: string[] = [];
 
   attackAction(monsterIndex: number) {
     const monster = this.monsters[monsterIndex];
 
     if (this.selectedActon === 'attack') {
-      monster.hp = monster.hp - this.player.damage;
-      this.combatLog.push(
-        `You deal ${this.player.damage} damage to ${monster.name}`
+      const dmgDealt = monster.takeDamage(this.player.damage);
+      this.combatLogService.addLine(
+        `You deal ${dmgDealt} damage to ${monster.name}`
       );
     }
     if (this.selectedActon === 'spell' && this.selectedSpell) {
-      const log = this.selectedSpell.action(monster);
-      this.combatLog.push(log);
+      const log = this.castSpell(monster, this.selectedSpell);
+      this.combatLogService.addLine(log);
     }
 
     this.postActionPhase();
@@ -61,7 +62,7 @@ export class CombatPageComponent {
     this.monsters.forEach((monster) => {
       if (!monster.isDefeated()) {
         const log = monster.takeAction();
-        this.combatLog.push(log);
+        this.combatLogService.addLine(log);
       }
     });
 
@@ -76,8 +77,21 @@ export class CombatPageComponent {
 
     if (allMonstersDefeated) {
       this.player.levelUp();
+      this.combatLogService.addLine(
+        'You win and level up gaining 3 hp and 3 damage'
+      );
       this.gameState = 'win';
+      this.monsters.forEach((monster) => monster.reward());
     }
+  }
+
+  castSpell(monster: Monster, spell: Unlockables.Spell) {
+    if (this.player.mp < spell.mpCost) {
+      return `You try to cast ${spell.name}, but you dont have enough mp`;
+    }
+    this.player.mp -= spell.mpCost;
+
+    return spell.action(monster, this.monsters);
   }
 
   attackBtn() {
@@ -85,8 +99,6 @@ export class CombatPageComponent {
   }
 
   spellBtn() {
-    this.selectedActon = 'spell';
-    // TODO: spell selection
     this.gameState = 'selectingSpell';
   }
 
@@ -94,13 +106,24 @@ export class CombatPageComponent {
     const result = confirm('Do you wish to run?');
     if (result == true) {
       this.router.navigateByUrl(Pages.Home);
-    } else {
     }
   }
 
   selectSpell(spell: Unlockables.Spell) {
+    if (spell.target === 'self' || spell.target === 'all') {
+      const log = this.castSpell(this.monsters[0], spell);
+      this.combatLogService.addLine(log);
+      this.gameState = 'fighting';
+      this.postActionPhase();
+      return;
+    }
     this.selectedSpell = spell;
+    this.selectedActon = 'spell';
     this.gameState = 'fighting';
+  }
+
+  returnHome() {
+    this.router.navigateByUrl('');
   }
 }
 
