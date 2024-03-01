@@ -780,7 +780,7 @@ class Scorpion extends Monster {
       if (dmgToDeal < 0) {
         dmgToDeal = 0;
       }
-      return this.takeDamageHelper(dmgToDeal - 30);
+      return this.takeDamageHelper(dmgToDeal);
     };
     this.takeAction = () => {
       const damageTaken = this.playerService.takeDamage(20, this);
@@ -860,7 +860,7 @@ class Icebird extends Monster {
       if (dmgToDeal < 0) {
         dmgToDeal = 0;
       }
-      return this.takeDamageHelper(dmgToDeal - 30);
+      return this.takeDamageHelper(dmgToDeal);
     };
     this.takeAction = () => {
       const damageTaken = this.playerService.takeDamage(10, this);
