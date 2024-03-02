@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href \"https://snubtuba.github.io/leap/\" --configuration=production",
+    "build": "ng build --base-href \"https://snubtuba.github.io/leap/\" --configuration=development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "angular-cli-ghpages --dir=dist/leap"
   },
   "private": true,
   "dependencies": {

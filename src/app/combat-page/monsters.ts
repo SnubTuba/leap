@@ -161,9 +161,9 @@ export class Icebird extends Monster {
 
   override takeDamage = (ammounOfDamage: number) => {
     this.combatLogService.addLine(
-      `Icebird's ice armor reduces the damage by 30`
+      `Icebird's ice armor reduces the damage by 50`
     );
-    let dmgToDeal = ammounOfDamage - 30;
+    let dmgToDeal = ammounOfDamage - 50;
     if (dmgToDeal < 0) {
       dmgToDeal = 0;
     }
