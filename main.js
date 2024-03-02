@@ -627,7 +627,7 @@ class EncounterTableService {
       case 3:
         return [[this.slime(), this.slime(), this.slime()], [this.skeleton()]];
       case 4:
-        return [[this.slime(), this.skeleton(), this.slime()], [this.skeleton(), this.skeleton(), this.skeleton()]];
+        return [[this.slime(), this.slime(), this.slime()], [this.slime(), this.skeleton(), this.slime()], [this.skeleton(), this.skeleton(), this.skeleton()]];
       case 5:
         return [[this.slime(), this.slime(), this.slime()], [this.skeleton(), this.skeleton(), this.skeleton()], [this.scorpion()]];
       case 6:
