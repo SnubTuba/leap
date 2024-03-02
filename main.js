@@ -449,6 +449,7 @@ class CombatPageComponent {
     this.selectedActon = 'attack';
     this.selectedSpell = this.unlocksService.getUnlockedSpells()[0];
     this.monsters = [];
+    this.startingMonsters = [];
     this.combatLogService.clear();
     this.player.reset();
     this.activatedRoute.queryParams.subscribe(queryParams => {
@@ -458,6 +459,7 @@ class CombatPageComponent {
         throw new Error('No Envounter Error');
       }
       this.monsters = this.encounterTableService.getEncounter(+encounterNumber);
+      this.startingMonsters = [...this.monsters];
       this.gameState = 'fighting';
       if (queryParams['playerLevel']) {
         this.player.setLevel(queryParams['playerLevel']);
@@ -477,7 +479,6 @@ class CombatPageComponent {
     this.postActionPhase();
   }
   postActionPhase() {
-    const unfilteredMonsters = this.monsters;
     this.monsters = this.monsters.filter(monster => !monster.isDefeated());
     this.monsters.forEach(monster => {
       const log = monster.takeAction(this.monsters);
@@ -490,7 +491,7 @@ class CombatPageComponent {
       this.player.levelUp();
       this.combatLogService.addLine('You win and level up gaining 10 hp, 3 mp, and 3 attack.');
       this.gameState = 'win';
-      unfilteredMonsters.forEach(monster => monster.reward());
+      this.startingMonsters.forEach(monster => monster.reward());
     }
   }
   castSpell(monster, spell) {
