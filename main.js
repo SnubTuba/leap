@@ -856,8 +856,8 @@ class Icebird extends Monster {
     this.name = 'Icebird';
     this.hp = 45;
     this.takeDamage = ammounOfDamage => {
-      this.combatLogService.addLine(`Icebird's ice armor reduces the damage by 30`);
-      let dmgToDeal = ammounOfDamage - 30;
+      this.combatLogService.addLine(`Icebird's ice armor reduces the damage by 50`);
+      let dmgToDeal = ammounOfDamage - 50;
       if (dmgToDeal < 0) {
         dmgToDeal = 0;
       }
